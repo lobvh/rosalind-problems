@@ -15,7 +15,7 @@ from collections import defaultdict
 with open('rosalind_dna.txt') as f:
     read_data = f.read()
 
-def dna_string_symbol_counter(dna_string = read_data):
+def dna_string_symbol_counter(dna_string=read_data):
     '''
         Given a DNA string return count of each letter in a string. DNA string consists of 4 symbols 'A','C','G' and 'T'.
 
@@ -26,12 +26,11 @@ def dna_string_symbol_counter(dna_string = read_data):
     '''
 
     dict_letter_counter = defaultdict(int)
-
     for character in dna_string:
         dict_letter_counter[character] += 1
 
-    a, c, g, t = dict(dict_letter_counter).values()
-
-    return a,c,g,t
+    #To populate a,t,g,c properly you have to see in which arrangement the dictionary is organised:
+    g, t, a, c, new_line_indicator = dict(dict_letter_counter).values()
+    return a, c, g, t
 
 print(dna_string_symbol_counter())
