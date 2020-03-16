@@ -91,25 +91,78 @@ Make key value pairs where {'>Rosalind_6404':GC percentage of rosalind_6404} is 
 with open('rosalind_dna.txt') as f:
     read_data = f.read()
 
-read_data = str(read_data)
 read_data_s = read_data.split("\n")
-print(read_data_s)
+#print(read_data_s)
 
 
-def gc_percentage_calculator(data):
+def gc_percentage_calculator(data, percentage_or_not=True):
+    '''
+        By default returns the GC percentage of a given string.
+        Additionally, if you set the percentage_or_not to False it returns tuple where first number indicates the number of G's and C's in a given string, and second one length of a given string.
 
-    data_filtered = "".join(sorted(data))
-    data_striped = len(data_filtered.strip("A").strip("T"))
-    return (data_striped / len(s)) * 100
+        >>> data = 'TGACCGAAGAGCTCCCACGCCACCAGCCTAAAGACTTGGAGGGATCGCAGACCTCCAAGA'
+        >>> gc_percentage(data)
+        >>> 40.229885057471265
+    '''
 
+    #Sort the data alphabeticaly...
+    data_sorted = "".join(sorted(data))
 
-helping_dictionary = defaultdict(int)
-for value in read_data_s:
-    if value.startswith('>'):
-        helping_dictionary[value] += 0
-        current_value = value
+    #... so that we can strip the unnecesarry content (A's and T's),
+    data_striped = data_sorted.strip("A").strip("T")
+
+    if percentage_or_not:
+        return (len(data_striped) / len(s)) * 100
     else:
-        helping_dictionary[current_value] += gc_percentage_calculator(value)
+        return len(data_striped), len(data)
 
-#Bug of logical nature it gives percentage relative to each value. One should keep track of number of bits till you find next startswith('>')
-print(helping_dictionary)
+
+
+helping_dictionary = defaultdict(list) # Could use tuple instead of list to save more memory...
+
+#We are gonna use "the trigger trick" here, because we need to keep track of each '>Rosalind_xxx' values.
+for value in read_data_s:
+
+    #First we 'capture' the '>Rosalind_xxxx' for our key in dictionary:
+    if value.startswith('>'):
+        current_value = value
+        helping_dictionary[current_value] = [0, 0]
+
+    #And then we update it's values until the if get's 'triggered' by the next '>Rosalind_xxxx' value
+    else:
+        a, b = gc_percentage_calculator(value, False)
+        helping_dictionary[current_value][0] += a
+        helping_dictionary[current_value][1] += b
+
+#print(dict(helping_dictionary))
+
+
+#Make dictionary of percentages:
+percentage_dictionary = defaultdict(int)
+
+for key, value in helping_dictionary.items():
+    percentage_dictionary[key] = round((value[0]/value[1])*100, 6)
+
+#print(dict(percentage_dictionary))
+
+#Reverse key/value pairs, so it's easy to get name of '>Rosalind_xxx' which has highest percentage:
+
+percentage_dictionary = dict(percentage_dictionary)
+percentage_dictionary_reversed = {value : key
+                                  for key, value in percentage_dictionary.items()}
+
+#Make empty list so we can obtain max percentage
+helping_list = []
+
+for value in dict(percentage_dictionary).values():
+    helping_list.append(value)
+
+print("'>Rosalind_xxx' with maximum GC percentage is '{}' with {}%".format(percentage_dictionary_reversed[max(helping_list)], max(helping_list)))
+
+
+'''
+Learned:
+- "Trigger trick"
+- Could improve code
+- Applied some new skills learned (unpacking tuples, changing key/value pairs etc.)
+'''
