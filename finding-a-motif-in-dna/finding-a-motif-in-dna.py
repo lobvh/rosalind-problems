@@ -59,3 +59,33 @@ if DNA_STRING.startswith(DNA_SUBSTRING, POSITION):
 "If DNA_STRING starts with the DNA_SUBSTRING on a position POSITION, return to me POSITION+1"
 
 '''
+
+
+with open('finding-a-motif-in-dna_data.txt') as FILE:
+
+    READ_DATA = []
+
+    for LINE in FILE:
+        READ_DATA.append(LINE)
+
+    #Data preprocessing suitable for our problem:
+
+    #Strip the \n's from lines
+    READ_DATA_STRIPPED = [LINE.strip('\n')
+                           for LINE in READ_DATA]
+
+    #Unpack it into two variables
+    INPUT_DNA_DATA, INPUT_DNA_MOTIF = READ_DATA_STRIPPED
+
+
+def find_motif_in_dna(DNA_DATA = DNA_STRING, DNA_MOTIF = DNA_SUBSTRING):
+
+    MOTIF_POSITIONS = []
+
+    for POSITION in range(len(DNA_DATA)):
+        if DNA_STRING.startswith(DNA_MOTIF, POSITION):
+            MOTIF_POSITIONS.append(POSITION + 1)
+
+    return MOTIF_POSITIONS
+
+print(find_motif_in_dna())
