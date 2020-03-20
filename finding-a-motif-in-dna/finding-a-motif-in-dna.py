@@ -61,6 +61,9 @@ if DNA_STRING.startswith(DNA_SUBSTRING, POSITION):
 '''
 
 
+
+#V3 solution
+
 with open('finding-a-motif-in-dna_data.txt') as FILE:
 
     READ_DATA = []
@@ -77,15 +80,14 @@ with open('finding-a-motif-in-dna_data.txt') as FILE:
     #Unpack it into two variables
     INPUT_DNA_DATA, INPUT_DNA_MOTIF = READ_DATA_STRIPPED
 
-
 def find_motif_in_dna(DNA_DATA = DNA_STRING, DNA_MOTIF = DNA_SUBSTRING):
 
     MOTIF_POSITIONS = []
 
     for POSITION in range(len(DNA_DATA)):
-        if DNA_STRING.startswith(DNA_MOTIF, POSITION):
+        if DNA_DATA.startswith(DNA_MOTIF, POSITION):
             MOTIF_POSITIONS.append(POSITION + 1)
 
     return MOTIF_POSITIONS
 
-print(find_motif_in_dna())
+print(find_motif_in_dna(INPUT_DNA_DATA, INPUT_DNA_MOTIF))
