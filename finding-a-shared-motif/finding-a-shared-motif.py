@@ -53,7 +53,7 @@ def strings_to_substrings(strings=HELPING_STRING):
 
     return dict(strings_to_substrings_dict)
 
-print(strings_to_substrings(DNA_STRINGS))
+#print(strings_to_substrings(DNA_STRINGS))
 
 def longest_common_motif(data = DNA_STRINGS):
 
@@ -87,23 +87,48 @@ def longest_common_motif(data = DNA_STRINGS):
     return max_occurent_motif, helping_dict_refined[max_occurent_motif]
 
 
-print(longest_common_motif())
+#print(longest_common_motif())
 
+
+##### Let's manage our .txt file :
 
 with open('finding-a-shared-motif.txt') as txt_file:
 
-    read_data = []
+    #Read all the lines from raw file
+    read_data = txt_file.readlines()
 
-    for each_line in txt_file:
-        read_data.append(each_line)
+    #Strip \n's from the raw_file
+    read_data = [element.strip("\n")
+                            for element in read_data]
+
+    #Make a dictionary out of it where keys represent >Rosalind_xxxx and it's values corresponding DNA strings that were previously divided
+    read_data_dict = defaultdict(str)
+    for element in read_data:
+
+        if element.startswith(">"):
+            current_element = element
+            read_data_dict[current_element] = ""
+        else:
+            read_data_dict[current_element] += element
+
+    #read_data_dict = dict(read_data_dict) <- We are not gonna do this for memory savings. It is better to stay as iterable because of the next thing I should do!
+
+#Since we don't need names of FASTAs, we are gonna make a list out of values in read_data_dict. It's also appropriate data type to feed our functions!
+
+data_string_list = []
+
+for value in read_data_dict.values():
+    data_string_list.append(value)
+
+print(data_string_list)
+
+data_substrings_dictionary = strings_to_substrings(data_string_list)
+
+datas_longest_motif = longest_common_motif(data_substrings_dictionary)
 
 
-'''
--Need to create a dictionary where key, value pairs are something like >Rosalind_8323 : 'GTTCTATATTATACATCCAGGAAGATTTATTGGTGG'
-'''
 
-
-
+print(datas_longest_motif)
 
 
 
